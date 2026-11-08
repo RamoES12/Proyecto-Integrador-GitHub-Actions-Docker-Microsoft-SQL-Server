@@ -37,12 +37,14 @@ if [[ "$listo" -ne 1 ]]; then
 fi
 
 echo "Copiando scripts SQL dentro del contenedor..."
+docker exec -u 0 "$CONTENEDOR" mkdir -p /tmp/sql
 docker cp sql/. "$CONTENEDOR":/tmp/sql/
+docker exec -u 0 "$CONTENEDOR" chmod -R 777 /tmp/sql
 
 echo "Ejecutando scripts SQL..."
 for archivo in create_database.sql create_tables.sql create_procedure.sql create_trigger.sql test_data.sql; do
   echo "Ejecutando: $archivo"
-  docker exec -e "SQLCMDPASSWORD=$MSSQL_SA_PASSWORD" "$CONTENEDOR" "$SQLCMD" -S localhost -U sa -C -b -d master -i "/tmp/sql/$archivo"
+  docker exec -u 0 -e "SQLCMDPASSWORD=$MSSQL_SA_PASSWORD" "$CONTENEDOR" "$SQLCMD" -S localhost -U sa -C -b -d master -i "/tmp/sql/$archivo"
 done
 
 echo "Base de datos lista."

@@ -26,7 +26,7 @@ jobs:
 
       - name: Probar ventas, auditoria e inventario
         run: |
-          docker exec -i \
+          docker exec -u 0 \
             -e "SQLCMDPASSWORD=$MSSQL_SA_PASSWORD" \
             empresa-sqlserver /opt/mssql-tools18/bin/sqlcmd \
             -S localhost -U sa -C -b -d EmpresaDB -i /tmp/sql/verify.sql
