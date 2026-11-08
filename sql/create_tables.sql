@@ -1,14 +1,7 @@
--- ============================================================================
--- Proyecto Integrador: GitHub Actions + Docker + Microsoft SQL Server
--- Archivo: sql/create_tables.sql
--- Descripción: Creación de tablas de negocio (Ventas, AuditoriaVentas e Inventario).
--- Incluye la tabla Inventario como parte del Reto Avanzado.
--- ============================================================================
-
 USE EmpresaDB;
 GO
 
--- Tabla: Ventas
+-- Tabla de ventas
 IF OBJECT_ID('dbo.Ventas', 'U') IS NULL
 BEGIN
     CREATE TABLE dbo.Ventas (
@@ -20,7 +13,7 @@ BEGIN
 END;
 GO
 
--- Tabla: AuditoriaVentas
+-- Tabla de auditoria
 IF OBJECT_ID('dbo.AuditoriaVentas', 'U') IS NULL
 BEGIN
     CREATE TABLE dbo.AuditoriaVentas (
@@ -34,7 +27,7 @@ BEGIN
 END;
 GO
 
--- Tabla: Inventario (Reto Avanzado)
+-- Tabla de inventario
 IF OBJECT_ID('dbo.Inventario', 'U') IS NULL
 BEGIN
     CREATE TABLE dbo.Inventario (

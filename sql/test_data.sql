@@ -1,14 +1,7 @@
--- ============================================================================
--- Proyecto Integrador: GitHub Actions + Docker + Microsoft SQL Server
--- Archivo: sql/test_data.sql
--- Descripción: Inserción de datos iniciales en Inventario y pruebas de ventas.
--- Incluye ventas individuales y una inserción múltiple simultánea (Reto Principal).
--- ============================================================================
-
 USE EmpresaDB;
 GO
 
--- 1. Poblado inicial de Inventario (Reto Avanzado)
+-- Stock inicial
 INSERT INTO dbo.Inventario (Producto, Existencias)
 VALUES 
     ('Laptop', 10),
@@ -16,13 +9,12 @@ VALUES
     ('Mouse', 20);
 GO
 
--- 2. Ventas individuales solicitadas en la especificación
+-- Ventas individuales
 INSERT INTO dbo.Ventas (Producto, Cantidad) VALUES ('Laptop', 3);
 INSERT INTO dbo.Ventas (Producto, Cantidad) VALUES ('Monitor', 5);
 GO
 
--- 3. Reto Principal: Inserción múltiple en una única instrucción SQL
--- Valida que el trigger capture y audite todas las filas del conjunto
+-- Venta de varios productos
 INSERT INTO dbo.Ventas (Producto, Cantidad)
 VALUES 
     ('Laptop', 2),
