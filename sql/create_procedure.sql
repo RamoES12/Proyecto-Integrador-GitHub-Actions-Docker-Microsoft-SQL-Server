@@ -1,10 +1,3 @@
--- ============================================================================
--- Proyecto Integrador: GitHub Actions + Docker + Microsoft SQL Server
--- Archivo: sql/create_procedure.sql
--- Descripción: Procedimiento almacenado sp_RegistrarAuditoria y tipo de tabla.
--- Resuelve el Reto Principal (inserciones múltiples por conjuntos) y el Reto
--- Avanzado (descuento automático de existencias en Inventario).
--- ============================================================================
 
 USE EmpresaDB;
 GO
