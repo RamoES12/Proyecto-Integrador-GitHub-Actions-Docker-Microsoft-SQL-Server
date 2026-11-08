@@ -9,6 +9,9 @@ fi
 CONTENEDOR="empresa-sqlserver"
 SQLCMD="/opt/mssql-tools18/bin/sqlcmd"
 
+echo "Limpiando contenedor previo si existe..."
+docker rm -f "$CONTENEDOR" >/dev/null 2>&1 || true
+
 echo "Iniciando SQL Server en Docker..."
 docker run --detach \
   --name "$CONTENEDOR" \
