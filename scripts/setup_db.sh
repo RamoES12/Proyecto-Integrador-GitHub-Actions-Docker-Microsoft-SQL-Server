@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ -z "${MSSQL_SA_PASSWORD:-}" ]]; then
-  echo 'Falta la contraseña MSSQL_SA_PASSWORD'
-  exit 1
-fi
+export MSSQL_SA_PASSWORD="${MSSQL_SA_PASSWORD:-Str0ngP@ssword2026!}"
+export ACCEPT_EULA="${ACCEPT_EULA:-Y}"
+export MSSQL_PID="${MSSQL_PID:-Developer}"
 
 CONTENEDOR="empresa-sqlserver"
 SQLCMD="/opt/mssql-tools18/bin/sqlcmd"
