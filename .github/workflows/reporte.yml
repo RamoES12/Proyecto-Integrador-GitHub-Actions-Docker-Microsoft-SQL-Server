@@ -3,14 +3,13 @@ name: 02 - Reporte programado de ventas CSV
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 12 * * 1' # Ejecución semanal programada: Todos los lunes a las 12:00 UTC
+    - cron: '0 12 * * 1'
 
 permissions:
   contents: read
 
 jobs:
-  generar_reporte:
-    name: Generación y Publicación de Reporte CSV
+  reporte:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
@@ -19,37 +18,31 @@ jobs:
       MSSQL_SA_PASSWORD: ${{ secrets.MSSQL_SA_PASSWORD }}
 
     steps:
-      - name: Descargar código del repositorio
+      - name: Descargar codigo
         uses: actions/checkout@v4
 
-      - name: Iniciar Docker y cargar datos de negocio
+      - name: Iniciar SQL Server y cargar datos
         run: bash scripts/setup_db.sh
 
-      - name: Exportar reporte de ventas a formato CSV
+      - name: Generar reporte CSV
         run: |
           set -euo pipefail
           mkdir -p reportes
           printf '"VentaID","Producto","Cantidad","Fecha"\n' > reportes/reporte_ventas.csv
 
-          docker exec -i \
+          docker exec \
             -e "SQLCMDPASSWORD=$MSSQL_SA_PASSWORD" \
             empresa-sqlserver /opt/mssql-tools18/bin/sqlcmd \
             -S localhost -U sa -C -b -d EmpresaDB \
-            -h -1 -W -w 65535 -i /dev/stdin \
-            < sql/report.sql \
+            -h -1 -W -w 65535 -i /tmp/sql/report.sql \
             | grep -v "Changed database context" \
             | sed '/^[[:space:]]*$/d' \
             >> reportes/reporte_ventas.csv
 
-          echo "==> Vista previa del reporte CSV generado:"
           cat reportes/reporte_ventas.csv
-          
-          # Validación: 1 fila de encabezado + 5 filas de ventas = 6 líneas totales
-          lineas=$(wc -l < reportes/reporte_ventas.csv)
-          echo "Total de líneas en el reporte: $lineas"
-          test "$lineas" -eq 6
+          test "$(wc -l < reportes/reporte_ventas.csv)" -eq 6
 
-      - name: Publicar reporte CSV como Artifact
+      - name: Subir reporte como Artifact
         uses: actions/upload-artifact@v4
         with:
           name: reporte-ventas-csv

@@ -10,7 +10,6 @@ permissions:
 
 jobs:
   desplegar:
-    name: Despliegue en Docker y Validación de Reglas
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
@@ -19,19 +18,15 @@ jobs:
       MSSQL_SA_PASSWORD: ${{ secrets.MSSQL_SA_PASSWORD }}
 
     steps:
-      - name: Descargar código del repositorio
+      - name: Descargar codigo
         uses: actions/checkout@v4
 
-      - name: Iniciar Docker y configurar EmpresaDB
+      - name: Iniciar SQL Server y crear tablas
         run: bash scripts/setup_db.sh
 
-      - name: Ejecutar pruebas de negocio y aserciones
+      - name: Probar ventas, auditoria e inventario
         run: |
           docker exec -i \
             -e "SQLCMDPASSWORD=$MSSQL_SA_PASSWORD" \
             empresa-sqlserver /opt/mssql-tools18/bin/sqlcmd \
-            -S localhost -U sa -C -b -d EmpresaDB -i /dev/stdin < sql/verify.sql
-
-      - name: Verificar estado del contenedor Docker
-        if: always()
-        run: docker ps -a --filter 'name=empresa-sqlserver'
+            -S localhost -U sa -C -b -d EmpresaDB -i /tmp/sql/verify.sql
